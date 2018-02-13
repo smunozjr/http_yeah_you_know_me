@@ -17,6 +17,7 @@ puts request_lines.inspect
 
 
 puts "Sending response."
+#strings
 verb = request_lines[0].split(" ")[0]
 path = request_lines[0].split(" ")[1]
 host = request_lines[1].chars[5..14].join
@@ -34,14 +35,25 @@ response = ["<pre>", "Verb: #{verb}", "Path: #{path}", "Host: #{host}", "Port: #
   elsif path == "/shutdown"
     response = "Total Requests: #{request_total_count}"
     output = "<html><head></head><body>#{response}</body></html>"
+  elsif path == "/wordsearch"
+    response = File.read('/usr/share/dict/words')
+    require "pry"; binding.pry
+      output = if response.includes(word)
+      "#{word.upcase} is a known word"
+    else
+      "#{word.upcase} is not a known word"
+    end
   else
     "/"
   end
   count += 1 if path == "/hello"
+
+
   request_total_count +=1
 
 
 puts count
+#response
 headers = ["http/1.1 200 ok",
           "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
           "server: ruby",
