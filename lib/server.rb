@@ -56,27 +56,27 @@ class Response
       end
     else
       "/"
-  end
+    end
     @count += 1 if path == "/hello"
     output
 
 
     request_total_count +=1
-  # end
 
+    headers = ["http/1.1 200 ok",
+      "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
+      "server: ruby",
+      "content-type: text/html; charset=iso-8859-1",
+      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+      client.puts headers
+      client.puts output
+
+      puts ["Wrote this response:", headers, output].join("\n")
+      puts "\nResponse complete, exiting."
+  end
 
 end
 
-headers = ["http/1.1 200 ok",
-  "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
-  "server: ruby",
-  "content-type: text/html; charset=iso-8859-1",
-  "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-client.puts headers
-client.puts output
-
-puts ["Wrote this response:", headers, output].join("\n")
-puts "\nResponse complete, exiting."
 
 response = Response.new(request_lines)
 # output = "<html><head></head><body>#{response.response}</body></html>"
@@ -84,7 +84,6 @@ response = Response.new(request_lines)
 
 puts count
 
-end
 
 
 # require 'socket'
@@ -111,6 +110,7 @@ end
 #       end
 #     end
 #       client.close
+        #tcp_server.close
 #   end
 #
 # puts "Got this request:"
