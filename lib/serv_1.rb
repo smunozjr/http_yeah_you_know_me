@@ -11,28 +11,32 @@ class Server
 
   def run
     while true
-
-      client = tcp_server.accept
-
+      @client = @tcp_server.accept
       puts "Ready for a request"
 
       request_lines = []
-      while line = client.gets and !line.chomp.empty?
-        request_lines << line.chomp
-      end
+      # def request_lines
+        while line = @client.gets and !line.chomp.empty?
+          request_lines << line.chomp
+        end
+        puts "Got this request:"
+        # puts @request.inspect
+        request_lines
+      # end
 
-      puts "Got this request:"
-      puts request_lines.inspect
+
 
 
 
       puts "Sending response."
-      #strings
+
       verb = request_lines[0].split(" ")[0]
       path = request_lines[0].split(" ")[1]
       host = request_lines[1].chars[5..14].join
       port = request_lines[1].chars[16..19].join
       origin = host
+
+
       accept = request_lines[6]
       response = ["<pre>", "Verb: #{verb}", "Path: #{path}", "Host: #{host}", "Port: #{port}", "Origin: #{host}", "#{accept}", "</pre>"].join("\n")
         if path == "/"
@@ -67,12 +71,14 @@ class Server
                 "server: ruby",
                 "content-type: text/html; charset=iso-8859-1",
                 "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-      client.puts headers
-      client.puts output
+      @client.puts headers
+      @client.puts output
 
       puts ["Wrote this response:", headers, output].join("\n")
       puts "\nResponse complete, exiting."
       break if path == "/shutdown"
     end
+    @client.close
+    @tcp_server.close
   end
 end
