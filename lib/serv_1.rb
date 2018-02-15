@@ -41,10 +41,12 @@ class Server
       response = ["<pre>", "Verb: #{verb}", "Path: #{path}", "Host: #{host}", "Port: #{port}", "Origin: #{host}", "#{accept}", "</pre>"].join("\n")
         if verb == "POST"
           if path == "/start_game"
+            
           elsif path == "/game"
           end
         elsif verb == "GET"
           if path == "/game"
+            require "pry"; binding.pry
           elsif path == "/"
             output = "<html><head></head><body>#{response}</body></html>"
           elsif path == "/hello"
@@ -72,7 +74,7 @@ class Server
 
 
       puts @count
-      #response
+
       headers = ["http/1.1 200 ok",
                 "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
                 "server: ruby",
