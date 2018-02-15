@@ -1,5 +1,7 @@
 require 'socket'
-# require 'response'
+# require './lib/response'
+require './lib/game'
+
 class Server
   attr_reader :tcp_server
 
@@ -23,30 +25,30 @@ class Server
         # puts @request.inspect
         request_lines
       # end
+    puts "Sending response."
 
+    def response(request_lines)
+      require "pry"; binding.pry
+      ResponseBuilder.new(request_lines)
+    end
+          verb = request_lines[0].split(" ")[0]
+          path = request_lines[0].split(" ")[1]
+          host = request_lines[1].chars[5..14].join
+          port = request_lines[1].chars[16..19].join
+          origin = host
+          accept = request_lines[6]
+          response = ["<pre>", "Verb: #{verb}", "Path: #{path}", "Host: #{host}", "Port: #{port}", "Origin: #{host}", "#{accept}", "</pre>"].join("\n")
 
-
-
-
-      puts "Sending response."
-      def response(request_lines)
-        ResponseBuilder.new.parsing_lines(request_lines)
-      end
-      verb = request_lines[0].split(" ")[0]
-      path = request_lines[0].split(" ")[1]
-      host = request_lines[1].chars[5..14].join
-      port = request_lines[1].chars[16..19].join
-      origin = host
-      accept = request_lines[6]
-      response = ["<pre>", "Verb: #{verb}", "Path: #{path}", "Host: #{host}", "Port: #{port}", "Origin: #{host}", "#{accept}", "</pre>"].join("\n")
         if verb == "POST"
+          # content_length = request_lines[3].split[1]
+          # post_request_body = @client.read(content_length.to_i)
           if path == "/start_game"
-            
+            output = "<html><head></head><body>Good luck!#{response}</body></html>"
+            game = Game.new
           elsif path == "/game"
           end
         elsif verb == "GET"
           if path == "/game"
-            require "pry"; binding.pry
           elsif path == "/"
             output = "<html><head></head><body>#{response}</body></html>"
           elsif path == "/hello"

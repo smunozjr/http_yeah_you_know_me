@@ -6,9 +6,10 @@ class ResponseBuilder
               :host,
               :port,
               :origin,
-              :accept
+              :accept,
+              :response
 
-  def parsing_lines(request_lines)
+  def initialize(request_lines)
     @verb = request_lines[0].split(" ")[0]
     @path = request_lines[0].split(" ")[1]
     @host = request_lines[1].chars[5..14].join
