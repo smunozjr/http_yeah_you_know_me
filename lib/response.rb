@@ -1,4 +1,4 @@
-require_relative 'serv_1'
+require './lib/serv_1'
 
 class ResponseBuilder
   attr_reader :verb,

@@ -1,5 +1,5 @@
 require 'socket'
-# require './lib/response'
+require './lib/response'
 require './lib/game'
 
 class Server
@@ -28,7 +28,6 @@ class Server
     puts "Sending response."
 
     def response(request_lines)
-      require "pry"; binding.pry
       ResponseBuilder.new(request_lines)
     end
           verb = request_lines[0].split(" ")[0]
@@ -73,6 +72,10 @@ class Server
         end
         @count += 1 if path == "/hello"
         @request_total_count +=1
+
+        # def output
+        #   "<html><head></head><body>#{@response}</body></html>"
+        # end
 
 
       puts @count
