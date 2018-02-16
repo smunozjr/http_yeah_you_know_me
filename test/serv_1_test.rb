@@ -10,11 +10,4 @@ class ServerTest < Minitest::Test
     assert_instance_of Server, server
   end
 
-  def test_reqeust_lines
-    skip
-    server = Server.new
-
-    assert_equal [] 
-  end
-
 end

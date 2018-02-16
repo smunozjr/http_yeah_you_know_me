@@ -2,7 +2,6 @@ require 'socket'
 require './lib/response'
 
 class Server
-  include Response
   attr_reader :tcp_server
   def initialize
     @tcp_server = TCPServer.new(9292)
@@ -15,34 +14,34 @@ class Server
   def run
     while @server_loop
       @client = tcp_server.accept
-
       request_lines = []
-        while line = @client.gets and !line.chomp.empty?
-          request_lines << line.chomp
-        end
 
-        response(request_lines)
-        printing_headers
-        @server_loop = false if @output.include? 'Total'
+    while line = @client.gets and !line.chomp.empty?
+    request_lines << line.chomp
+    end
+    @request_total_count += 1
+    response(request_lines)
+    printing_headers
+    @server_loop = false if @output.include? 'Total'
     end
     @client.close
     tcp_server.close
   end
 
-    def response(request_lines)
-      @output = Response.route(request_lines)
-    end
+  def response(request_lines)
+      @output = Response.new(request_lines).get_response(@request_total_count)
+  end
 
-    def printing_headers
-      headers = ["http/1.1 200 ok",
+  def printing_headers
+    headers = ["http/1.1 200 ok",
                 "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
                 "server: ruby",
                 "content-type: text/html; charset=iso-8859-1",
                 "content-length: #{@output.length}\r\n\r\n"].join("\r\n")
-      @client.puts headers
-      @client.puts @output
+    @client.puts headers
+    @client.puts @output
 
-      puts ["Wrote this response:", headers, @output].join("\n")
-      puts "\nResponse complete, exiting."
-    end
+    puts ["Wrote this response:", headers, @output].join("\n")
+    puts "\nResponse complete, exiting."
+  end
 end
